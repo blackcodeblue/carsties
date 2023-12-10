@@ -24,10 +24,10 @@ public class AuctionUpdatedConsumer : IConsumer<AuctionUpdated>
             .Match(a => a.ID == context.Message.Id)
             .ModifyOnly(x => new
             {
+                x.Color,
                 x.Make,
                 x.Model,
                 x.Year,
-                x.Color,
                 x.Mileage
             }, item)
             .ExecuteAsync();
