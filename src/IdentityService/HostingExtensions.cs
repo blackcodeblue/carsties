@@ -1,10 +1,8 @@
-using Duende.IdentityServer;
 using IdentityService.Data;
 using IdentityService.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace IdentityService;
 
@@ -28,7 +26,6 @@ internal static class HostingExtensions
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
-                
                 if (builder.Environment.IsEnvironment("Docker"))
                 {
                     options.IssuerUri = "identity-svc";
@@ -39,7 +36,7 @@ internal static class HostingExtensions
             })
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients)
+            .AddInMemoryClients(Config.Clients(builder.Configuration))
             .AddAspNetIdentity<ApplicationUser>()
             .AddProfileService<CustomProfileService>();
 
@@ -49,17 +46,6 @@ internal static class HostingExtensions
         });
 
         builder.Services.AddAuthentication();
-        // builder.Services.AddAuthentication()
-        //     .AddGoogle(options =>
-        //     {
-        //         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-        //         // register your IdentityServer with Google at https://console.developers.google.com
-        //         // enable the Google+ API
-        //         // set the redirect URI to https://localhost:5001/signin-google
-        //         options.ClientId = "copy client ID from Google here";
-        //         options.ClientSecret = "copy client secret from Google here";
-        //     });
 
         return builder.Build();
     }
