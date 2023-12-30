@@ -104,6 +104,19 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+  notify-svc:
+    image: blackcodeblue/notify-svc:0.0.0
+    build:
+      context: .
+      dockerfile: src/NotificationService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+    ports:
+      - 7004:80
+    depends_on:
+      - rabbitmq
 
 # # comment out if using anon volumes above
 # volumes:
